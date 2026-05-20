@@ -765,6 +765,24 @@
     to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
   }
 
+  /* ===== FLOWER SHOWER ===== */
+  .flower-petal {
+    position: fixed;
+    top: -60px;
+    font-size: 22px;
+    animation: flowerFall linear forwards;
+    z-index: 9998;
+    pointer-events: none;
+    user-select: none;
+  }
+  @keyframes flowerFall {
+    0%   { transform: translateY(0) translateX(0) rotate(0deg) scale(1); opacity: 1; }
+    25%  { transform: translateY(27vh) translateX(calc(var(--drift, 40px) * 0.4)) rotate(135deg) scale(0.95); }
+    50%  { transform: translateY(55vh) translateX(calc(var(--drift, 40px) * 0.7)) rotate(270deg) scale(0.9); }
+    80%  { opacity: 1; }
+    100% { transform: translateY(110vh) translateX(var(--drift, 40px)) rotate(540deg) scale(0.7); opacity: 0; }
+  }
+
   /* ===== GLOBAL ANIMATIONS ===== */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(30px); }
@@ -1110,7 +1128,10 @@
 
   <div class="gallery-grid">
     <div class="gallery-frame reveal" style="--rot:-2deg">
-      <div class="gallery-inner">🌸</div>
+      <div class="gallery-inner">
+  <img src="Image-1.jpg" style="width:100%;height:100%;object-fit:cover;">
+</div>
+
       <div class="gallery-heart-overlay">❤️</div>
       <div class="gallery-caption">Every photo with you<br>is my favourite</div>
     </div>
@@ -1372,6 +1393,34 @@ function setupNavDots() {
     if (el) observer.observe(el);
   });
 }
+
+// ===== FLOWER SHOWER (page load) =====
+function launchFlowerShower() {
+  const flowers = ['🌸', '🌺', '🌹', '🌷', '💐', '🌼', '🌻', '🪷'];
+  const totalPetals = 80;
+  for (let i = 0; i < totalPetals; i++) {
+    setTimeout(() => {
+      const petal = document.createElement('div');
+      petal.className = 'flower-petal';
+      petal.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+      petal.style.left = (Math.random() * 105) + 'vw';
+      petal.style.fontSize = (Math.random() * 18 + 14) + 'px';
+      const duration = (Math.random() * 3 + 3).toFixed(2);
+      petal.style.animationDuration = duration + 's';
+      petal.style.animationDelay = '0s';
+      // slight horizontal drift
+      const drift = (Math.random() - 0.5) * 120;
+      petal.style.setProperty('--drift', drift + 'px');
+      document.body.appendChild(petal);
+      setTimeout(() => petal.remove(), (parseFloat(duration) + 0.5) * 1000);
+    }, i * 60);
+  }
+}
+
+// Trigger flower shower on page load
+window.addEventListener('load', () => {
+  setTimeout(launchFlowerShower, 400);
+});
 
 // ===== CONFETTI =====
 function launchConfetti() {
